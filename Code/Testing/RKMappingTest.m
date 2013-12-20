@@ -443,8 +443,10 @@ NSString * const RKMappingTestVerificationFailureException = @"RKMappingTestVeri
 - (BOOL)evaluateExpectation:(id)expectation error:(NSError **)error
 {
     NSParameterAssert(expectation);
+#ifdef DEBUG
     Class connectionTestExpectation = NSClassFromString(@"RKConnectionTestExpectation");
     NSAssert([expectation isKindOfClass:[RKPropertyMappingTestExpectation class]] || (connectionTestExpectation && [expectation isKindOfClass:connectionTestExpectation]), @"Must be an instance of `RKPropertyMappingTestExpectation` or `RKConnectionTestExpectation`");
+#endif
     [self performMapping];
 
     RKMappingTestEvent *event = [self eventMatchingExpectation:expectation];
