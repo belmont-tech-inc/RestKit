@@ -227,9 +227,12 @@ static BOOL entityIdentificationInferenceEnabled = YES;
 
 - (void)addConnection:(RKConnectionDescription *)connection
 {
+#ifdef DEBUG
     if (! connection) [NSException raise:NSInvalidArgumentException format:@"connection cannot be nil."];
     RKConnectionDescription *existingConnection = [self connectionForRelationship:connection.relationship];
     if (existingConnection) [NSException raise:NSInternalInconsistencyException format:@"Cannot add connection: An existing connection already exists for the '%@' relationship.", connection.relationship.name];
+    NSAssert(existingConnection == nil, @"Cannot add connection: An existing connection already exists for the '%@' relationship.", connection.relationship.name);
+#endif
     NSAssert(self.mutableConnections, @"self.mutableConnections should not be nil");
     [self.mutableConnections addObject:connection];
 }

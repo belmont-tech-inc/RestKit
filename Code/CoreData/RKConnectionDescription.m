@@ -20,6 +20,7 @@
 
 #import "RKConnectionDescription.h"
 
+#ifdef DEBUG
 static NSSet *RKSetWithInvalidAttributesForEntity(NSArray *attributes, NSEntityDescription *entity)
 {
     NSMutableSet *attributesSet = [NSMutableSet setWithArray:attributes];
@@ -27,6 +28,7 @@ static NSSet *RKSetWithInvalidAttributesForEntity(NSArray *attributes, NSEntityD
     [attributesSet minusSet:validAttributeNames];
     return attributesSet;
 }
+#endif
 
 // Provides support for connecting a relationship by
 @interface RKForeignKeyConnectionDescription : RKConnectionDescription
@@ -49,11 +51,12 @@ static NSSet *RKSetWithInvalidAttributesForEntity(NSArray *attributes, NSEntityD
     NSParameterAssert(relationship);
     NSParameterAssert(attributes);
     if (! [attributes count]) [NSException raise:NSInvalidArgumentException format:@"Cannot connect a relationship without at least one pair of attributes describing the connection"];
+#ifdef DEBUG
     NSSet *invalidSourceAttributes = RKSetWithInvalidAttributesForEntity([attributes allKeys], [relationship entity]);
     if ([invalidSourceAttributes count]) [NSException raise:NSInvalidArgumentException format:@"Cannot connect relationship: invalid attributes given for source entity '%@': %@", [[relationship entity] name], [[invalidSourceAttributes allObjects] componentsJoinedByString:@", "]];
     NSSet *invalidDestinationAttributes = RKSetWithInvalidAttributesForEntity([attributes allValues], [relationship destinationEntity]);
     if ([invalidDestinationAttributes count]) [NSException raise:NSInvalidArgumentException format:@"Cannot connect relationship: invalid attributes given for destination entity '%@': %@", [[relationship destinationEntity] name], [[invalidDestinationAttributes allObjects] componentsJoinedByString:@", "]];
-    
+#endif
     self = [[RKForeignKeyConnectionDescription alloc] init];
     if (self) {
         self.relationship = relationship;

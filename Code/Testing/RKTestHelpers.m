@@ -126,9 +126,10 @@
     [[NSURLCache sharedURLCache] storeCachedResponse:cachedResponse forRequest:request];
     
     // Verify that we can get the cached response back
+#ifdef DEBUG
     NSCachedURLResponse *__unused storedResponse = [[NSURLCache sharedURLCache] cachedResponseForRequest:request];
     NSAssert(storedResponse, @"Expected to retrieve cached response for request '%@', instead got nil.", request);
-    
+#endif
     return cachedResponse;
 }
 
