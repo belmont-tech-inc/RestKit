@@ -289,6 +289,7 @@ NSString * const RKSearchableAttributeNamesUserInfoKey = @"RestKitSearchableAttr
     NSSet *objectsToIndex = [self objectsToIndexFromCandidateObjects:candidateObjects checkChangedValues:NO];    
 
 #ifdef DEBUG
+    NSMutableSet *__unused failedObjectIDs = [NSMutableSet set];
     NSMutableSet *failedObjectIDs = [NSMutableSet set];
 #endif
 

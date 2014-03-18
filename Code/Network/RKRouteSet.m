@@ -83,7 +83,7 @@
     if ([route isClassRoute]) {
 #ifdef DEBUG
         RKRoute *existingRoute = [self routeForClass:route.objectClass method:route.method];
-        NSAssert(existingRoute == nil || (existingRoute.method == RKRequestMethodAny && route.method != RKRequestMethodAny) || (route.method == RKRequestMethodAny && existingRoute.method != RKRequestMethodAny), @"Cannot add a route with the same class and method as an existing route.");
+        if (! (existingRoute == nil || (existingRoute.method == RKRequestMethodAny && route.method != RKRequestMethodAny) || (route.method == RKRequestMethodAny && existingRoute.method != RKRequestMethodAny))) [NSException raise:NSInternalInconsistencyException format:@"Cannot add a route with the same class and method as an existing route."];
 #endif
     } else if ([route isRelationshipRoute]) {
         NSArray *routes = [self routesForRelationship:route.name ofClass:route.objectClass];
