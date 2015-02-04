@@ -103,6 +103,13 @@ RKlcl_log(RKLogComponent, RKlcl_vDebug, @"" __VA_ARGS__)
 RKlcl_log(RKLogComponent, RKlcl_vTrace, @"" __VA_ARGS__)
 
 /**
+ Define a special log level so that we know this is something we(Onshape) introduced.
+ These log statements were introduced to help debug IOS-2399 "Failed to match response descriptors"
+ */
+#define RKLogOnshape(...)                                                              \
+RKlcl_log(RKLogComponent, RKlcl_vCritical, @"" __VA_ARGS__)
+
+/**
  Log Level Aliases
 
  These aliases simply map the log levels defined within LibComponentLogger to something more friendly

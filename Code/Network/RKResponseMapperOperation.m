@@ -351,9 +351,11 @@ static NSMutableDictionary *RKRegisteredResponseMapperOperationDataSourceClasses
         [self willFinish];
         return;
     }
-    
+
     // Fail if no response descriptors matched
     if (error.code == RKMappingErrorNotFound && [self.responseMappingsDictionary count] == 0) {
+        RKLogOnshape(@"Fail if no response descriptors matched");
+        RKLogOnshape(@"self.matchingResponseDescriptors = %@", self.matchingResponseDescriptors);
         NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: NSLocalizedString(@"No response descriptors match the response loaded.", nil),
                                     NSLocalizedFailureReasonErrorKey: RKFailureReasonErrorStringForResponseDescriptorsMismatchWithResponse(self.responseDescriptors, self.response),
                                     RKMappingErrorKeyPathErrorKey: [NSNull null],

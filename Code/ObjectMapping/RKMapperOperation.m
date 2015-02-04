@@ -194,6 +194,8 @@ static NSString *RKFailureReasonErrorStringForMappingNotFoundError(id representa
             return destinationObject;
         }
     } else {
+        RKLogOnshape(@"Attempted to map an object but couldn't find a mapping for the keyPath");
+        RKLogOnshape(@"keypath = %@, mapping %@, destinationObject = %@", keyPath, mapping, destinationObject);
         // Attempted to map an object but couldn't find a mapping for the keyPath
         [self addErrorForUnmappableKeyPath:keyPath];
         return nil;
@@ -381,6 +383,10 @@ static NSString *RKFailureReasonErrorStringForMappingNotFoundError(id representa
         }
     }
 
+    if (foundMappable == NO)
+    {
+        RKLogOnshape(@"foundMappable = NO, mappingsByKeyPath = %@, representation = %@", mappingsByKeyPath, self.representation);
+    }
     if (NO == foundMappable) return nil;
     return results;
 }
