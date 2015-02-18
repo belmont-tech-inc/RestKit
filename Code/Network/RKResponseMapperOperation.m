@@ -223,6 +223,20 @@ static NSMutableDictionary *RKRegisteredResponseMapperOperationDataSourceClasses
     NSIndexSet *indexSet = [self.responseDescriptors indexesOfObjectsPassingTest:^BOOL(RKResponseDescriptor *responseDescriptor, NSUInteger idx, BOOL *stop) {
         return [responseDescriptor matchesResponse:self.response] && (RKRequestMethodFromString(self.request.HTTPMethod) & responseDescriptor.method);
     }];
+    if (indexSet.count == 0)
+    {
+        RKLogOnshape(@"If we reached here, we have failed to build any response descriptors");
+        RKLogOnshape(@"Response : %@, status : %d, method : %@", self.response.URL, (int)self.response.statusCode, self.request.HTTPMethod);
+        // try to find out how we could have gone wrong
+        for (RKResponseDescriptor *descriptor in self.responseDescriptors)
+        {
+            RKLogOnshape(@"%@,  httpmatching = %d matchesUrl = %d, matchesCode = %d",
+                         descriptor.pathPattern,
+                         (int)(RKRequestMethodFromString(self.request.HTTPMethod) & descriptor.method),
+                         [descriptor matchesURL:self.response.URL],
+                         [descriptor.statusCodes containsIndex:self.response.statusCode]);
+        }
+    }
     return [self.responseDescriptors objectsAtIndexes:indexSet];
 }
 
@@ -356,6 +370,8 @@ static NSMutableDictionary *RKRegisteredResponseMapperOperationDataSourceClasses
     if (error.code == RKMappingErrorNotFound && [self.responseMappingsDictionary count] == 0) {
         RKLogOnshape(@"Fail if no response descriptors matched");
         RKLogOnshape(@"self.matchingResponseDescriptors = %@", self.matchingResponseDescriptors);
+        RKLogOnshape(@"self.responseDescriptors = %@", self.responseDescriptors);
+        RKLogOnshape(@"self.responseMappingsDictionary = %@", self.responseMappingsDictionary);
         NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: NSLocalizedString(@"No response descriptors match the response loaded.", nil),
                                     NSLocalizedFailureReasonErrorKey: RKFailureReasonErrorStringForResponseDescriptorsMismatchWithResponse(self.responseDescriptors, self.response),
                                     RKMappingErrorKeyPathErrorKey: [NSNull null],
